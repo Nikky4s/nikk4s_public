@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--Calculate the amount of liquid in a cylindrical tank with a dished bottom.
+-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="30.02" TargetName="TankVolume" TargetType="AddOnInstructionDefinition" TargetRevision="1.0 " TargetLastEdited="2022-04-09T22:41:24.935Z" ContainsContext="true" ExportDate="Sat Apr 09 17:49:45 2022" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="CM1">
+<DataTypes Use="Context">
+</DataTypes>
+<AddOnInstructionDefinitions Use="Context">
+<AddOnInstructionDefinition Use="Target" Name="TankVolume" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2022-04-09T19:13:15.086Z" CreatedBy="Not Available" EditedDate="2022-04-09T22:41:24.935Z" EditedBy="ROCKLINEIND\ntfors" SoftwareRevision="v30.02"
+>
+<Description>
+<![CDATA[Calculate the amount of liquid in a cylindrical tank with a dished bottom.
+]]>
+</Description>
+<AdditionalHelpText>
+<![CDATA[Requires:
+Diameter of tank
+Value in inH2O when liquid is at top of dish
+Current value in inH2O of the tank level
+Outputs:
+Amount of liquid in tank (Liters)
+Amount of liquid in tank (Gallons)]]>
+</AdditionalHelpText>
+<Parameters>
+<Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Input - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Output - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="Tank_Diam" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="true" Visible="true" ExternalAccess="None">
+<Description>
+<![CDATA[Diameter Of Tank In Inches]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="Bowl_Depth" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="true" Visible="true" ExternalAccess="None">
+<Description>
+<![CDATA[inH20 At Top Of Bowl]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="inH2O" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="true" Visible="true" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Analog Input From Field Device]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="Liters" TagType="Base" DataType="REAL" Usage="Output" Radix="Float" Required="false" Visible="true" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Calculated Product In Tank
+Liters]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="Gallons" TagType="Base" DataType="REAL" Usage="Output" Radix="Float" Required="false" Visible="true" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Calculated Product In Tank
+Gallons]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</Parameter>
+</Parameters>
+<LocalTags>
+<LocalTag Name="cubeInCyl" DataType="REAL" Radix="Float" ExternalAccess="None">
+<Description>
+<![CDATA[calculated cubic inches of product above bowl]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</LocalTag>
+<LocalTag Name="cubeInBowl" DataType="REAL" Radix="Float" ExternalAccess="None">
+<Description>
+<![CDATA[calculated cubic inches of product in bowl]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</LocalTag>
+<LocalTag Name="h" DataType="REAL" Radix="Float" ExternalAccess="None">
+<Description>
+<![CDATA[inH2O Depth of Liquid]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</LocalTag>
+<LocalTag Name="a" DataType="REAL" Radix="Float" ExternalAccess="None">
+<Description>
+<![CDATA[tank radius in inches]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</LocalTag>
+<LocalTag Name="cubeInPerGal" DataType="REAL" Radix="Float" ExternalAccess="None">
+<Description>
+<![CDATA[cubic inches per gallon]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[2.31000000e+002]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="231.0"/>
+</DefaultData>
+</LocalTag>
+<LocalTag Name="cubeInPerLit" DataType="REAL" Radix="Float" ExternalAccess="None">
+<Description>
+<![CDATA[cubic inches per liter]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[6.10237007e+001]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="61.0237"/>
+</DefaultData>
+</LocalTag>
+<LocalTag Name="pi" DataType="REAL" Radix="Float" ExternalAccess="None">
+<Description>
+<![CDATA[Pi]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[3.14159012e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="3.14159"/>
+</DefaultData>
+</LocalTag>
+</LocalTags>
+<Routines>
+<Routine Name="Logic" Type="ST">
+<STContent>
+<Line Number="0">
+<![CDATA[a := Tank_Diam/2;]]>
+</Line>
+<Line Number="1">
+<![CDATA[h := inH2O;]]>
+</Line>
+<Line Number="2">
+<![CDATA[]]>
+</Line>
+<Line Number="3">
+<![CDATA[]]>
+</Line>
+<Line Number="4">
+<![CDATA[//	Calculate volume of liquid in bowl]]>
+</Line>
+<Line Number="5">
+<![CDATA[IF inH2O <= Bowl_Depth THEN]]>
+</Line>
+<Line Number="6">
+<![CDATA[	cubeInBowl := 1/6*pi*h*(3*(a**2)+h**2);]]>
+</Line>
+<Line Number="7">
+<![CDATA[ELSE ]]>
+</Line>
+<Line Number="8">
+<![CDATA[	cubeInBowl := 1/6*pi*Bowl_Depth*(3*(a**2)+ Bowl_Depth**2);]]>
+</Line>
+<Line Number="9">
+<![CDATA[END_IF;]]>
+</Line>
+<Line Number="10">
+<![CDATA[]]>
+</Line>
+<Line Number="11">
+<![CDATA[//	Calculate volume of liquid above bowl]]>
+</Line>
+<Line Number="12">
+<![CDATA[IF inH2O > Bowl_Depth THEN]]>
+</Line>
+<Line Number="13">
+<![CDATA[	cubeInCyl := pi*(a**2)*(h-Bowl_Depth);]]>
+</Line>
+<Line Number="14">
+<![CDATA[ELSE]]>
+</Line>
+<Line Number="15">
+<![CDATA[	cubeInCyl := 0.0;]]>
+</Line>
+<Line Number="16">
+<![CDATA[END_IF;]]>
+</Line>
+<Line Number="17">
+<![CDATA[]]>
+</Line>
+<Line Number="18">
+<![CDATA[//	Calculate total volume of liquid in tank (Liters)]]>
+</Line>
+<Line Number="19">
+<![CDATA[Liters := (cubeInBowl+cubeInCyl)/cubeInPerLit;]]>
+</Line>
+<Line Number="20">
+<![CDATA[]]>
+</Line>
+<Line Number="21">
+<![CDATA[]]>
+</Line>
+<Line Number="22">
+<![CDATA[//	Calculate total volume of liquid in tank (Gallons)]]>
+</Line>
+<Line Number="23">
+<![CDATA[Gallons := (cubeInBowl+cubeInCyl)/cubeInPerGal;]]>
+</Line>
+</STContent>
+</Routine>
+</Routines>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+</Controller>
+</RSLogix5000Content>
