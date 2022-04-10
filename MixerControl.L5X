@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--Activate Mixer based on button states and liquid level-->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="30.02" TargetName="MixerControl" TargetType="AddOnInstructionDefinition" TargetRevision="1.0 " TargetLastEdited="2022-04-10T15:26:00.296Z" ContainsContext="true" ExportDate="Sun Apr 10 10:28:07 2022" ExportOptions="References NoRawData L5KData DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="CM1">
+<DataTypes Use="Context">
+</DataTypes>
+<AddOnInstructionDefinitions Use="Context">
+<AddOnInstructionDefinition Use="Target" Name="MixerControl" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2022-04-10T13:41:58.213Z" CreatedBy="ROCKLINEIND\ntfors" EditedDate="2022-04-10T15:26:00.296Z" EditedBy="ROCKLINEIND\ntfors" SoftwareRevision="v30.02"
+>
+<Description>
+<![CDATA[Activate Mixer based on button states and liquid level]]>
+</Description>
+<AdditionalHelpText>
+<![CDATA[PushButton states are handled externally]]>
+</AdditionalHelpText>
+<Parameters>
+<Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Input - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Output - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="AutoPB" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="true" Visible="true" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[HMI Auto]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="StartPB" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="true" Visible="true" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[HMI Start]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="ProdLvl" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="true" Visible="true" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Product Level]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="StirLvl" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="true" Visible="true" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Agitator ok to run at this level]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="DB" TagType="Base" DataType="REAL" Usage="Input" Radix="Float" Required="true" Visible="true" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Agitator start at higher level and stop at lower level to prevent cycling]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0.00000000e+000]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="Mixer" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="true" Visible="true" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Contactor for mixer]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</DefaultData>
+</Parameter>
+</Parameters>
+<LocalTags>
+<LocalTag Name="Run" DataType="BOOL" Radix="Decimal" ExternalAccess="None">
+<Description>
+<![CDATA[If high than run mixer contactor]]>
+</Description>
+<DefaultData Format="L5K">
+<![CDATA[0]]>
+</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</DefaultData>
+</LocalTag>
+</LocalTags>
+<Routines>
+<Routine Name="Logic" Type="ST">
+<STContent>
+<Line Number="0">
+<![CDATA[// Button control is handled externally from this instruction]]>
+</Line>
+<Line Number="1">
+<![CDATA[]]>
+</Line>
+<Line Number="2">
+<![CDATA[Mixer := Run;]]>
+</Line>
+<Line Number="3">
+<![CDATA[]]>
+</Line>
+<Line Number="4">
+<![CDATA[// Start will start the mixer]]>
+</Line>
+<Line Number="5">
+<![CDATA[If StartPB THEN ]]>
+</Line>
+<Line Number="6">
+<![CDATA[	Run := 1;]]>
+</Line>
+<Line Number="7">
+<![CDATA[// Auto will engage the mixer at StirLvl + DB]]>
+</Line>
+<Line Number="8">
+<![CDATA[ELSIF (AutoPB AND ProdLvl>=(StirLvl+DB)) THEN ]]>
+</Line>
+<Line Number="9">
+<![CDATA[	Run := 1;]]>
+</Line>
+<Line Number="10">
+<![CDATA[// Auto will continue to engage the mixer untill ProdLvl falls below StirLvl-DB]]>
+</Line>
+<Line Number="11">
+<![CDATA[ELSIF (AutoPB AND Run AND ProdLvl>=(StirLvl-DB)) THEN ]]>
+</Line>
+<Line Number="12">
+<![CDATA[	Run := 1;]]>
+</Line>
+<Line Number="13">
+<![CDATA[// Mixer run conditions are not met]]>
+</Line>
+<Line Number="14">
+<![CDATA[ELSE Run := 0;]]>
+</Line>
+<Line Number="15">
+<![CDATA[END_IF;]]>
+</Line>
+<Line Number="16">
+<![CDATA[]]>
+</Line>
+<Line Number="17">
+<![CDATA[]]>
+</Line>
+<Line Number="18">
+<![CDATA[]]>
+</Line>
+</STContent>
+</Routine>
+</Routines>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+</Controller>
+</RSLogix5000Content>
